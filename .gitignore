@@ -4,3 +4,5 @@
 
 # disable nested /day-1/target
 /day-1/target/*
+
+.DS_Store
