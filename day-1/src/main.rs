@@ -2,11 +2,12 @@ use std::env;
 use std::fs;
 use std::io;
 
-pub fn read_file(file_path: &str) -> io::Result<String> {
-    println!(
-        "Current directory read_file: {:?}",
-        env::current_dir().unwrap()
-    );
+pub fn read_file() -> io::Result<String> {
+    let mut args = env::args();
+    // ignore cargo run but get the next value;
+    args.next();
+    let file_path = args.next().unwrap();
+
     Ok(fs::read_to_string(file_path)?)
 }
 
@@ -35,7 +36,7 @@ pub fn split_line(
 
 fn part_one(mut left_num: Vec<i32>, mut right_num: Vec<i32>) -> (i32, Vec<i32>, Vec<i32>) {
     let mut total_distance = 0;
-    match read_file("src/text.txt") {
+    match read_file() {
         Ok(content) => {
             for line in content.lines() {
                 split_line(line, &mut left_num, &mut right_num);
@@ -48,11 +49,9 @@ fn part_one(mut left_num: Vec<i32>, mut right_num: Vec<i32>) -> (i32, Vec<i32>, 
     }
 
     for i in 0..left_num.len() {
-        let mut distance = left_num[i] - right_num[i];
-        if distance < 0 {
-            distance *= -1;
-        }
-        total_distance += distance;
+        let distance = left_num[i] - right_num[i];
+
+        total_distance += distance.abs();
     }
 
     (total_distance, left_num, right_num)
